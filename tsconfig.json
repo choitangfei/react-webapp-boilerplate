@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"target": "es2017",
+		"typeRoots": [
+			"src/types"
+		],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "node",
+		"noEmit": true,
+		"baseUrl": ".",
+		"jsx": "react",
+		"paths": {
+			"App/*": ["src/app/*"],
+			"Types/*": ["src/types/*"]
+		}
+	},
+	"include": [
+		"src"
+	]
+}
