@@ -2,7 +2,8 @@
 	"compilerOptions": {
 		"target": "es2017",
 		"typeRoots": [
-			"src/types"
+			"src/types",
+			"./node_modules/@types"
 		],
 		"allowJs": true,
 		"skipLibCheck": true,
@@ -16,8 +17,12 @@
 		"baseUrl": ".",
 		"jsx": "react",
 		"paths": {
-			"App/*": ["src/app/*"],
-			"Types/*": ["src/types/*"]
+			"App/*": [
+				"src/app/*"
+			],
+			"Types/*": [
+				"src/types/*"
+			]
 		}
 	},
 	"include": [

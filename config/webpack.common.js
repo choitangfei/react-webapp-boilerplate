@@ -1,113 +1,116 @@
-const path = require('path');
-const APP_PATH = path.resolve(__dirname, '../src');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const argv = require('yargs').argv;
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const { merge } = require('webpack-merge');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require("path");
+const APP_PATH = path.resolve(__dirname, "../src");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const argv = require("yargs").argv;
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const { merge } = require("webpack-merge");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ESLintPlugin = require("eslint-webpack-plugin");
 
 const webpackConfig = {
-	plugins: []
+	plugins: [],
 };
 
-if(argv.report){
-	webpackConfig.plugins.push(new BundleAnalyzerPlugin({
-		analyzerMode: 'static',
-		openAnalyzer: false,
-		reportFilename: path.join(__dirname, '../dist/report.html')
-	}));
+if (argv.report) {
+	webpackConfig.plugins.push(
+		new BundleAnalyzerPlugin({
+			analyzerMode: "static",
+			openAnalyzer: false,
+			reportFilename: path.join(__dirname, "../reports/report.html"),
+		})
+	);
 }
 
 module.exports = merge(webpackConfig, {
 	entry: {
-		app: './src/index.ts'
+		app: "./src/index.ts",
 	},
 	output: {
-		filename: 'js/[name].bundle.js',
-		path: path.resolve(__dirname, '../dist'),
-		publicPath: '/'
+		filename: "js/[name].bundle.js",
+		path: path.resolve(__dirname, "../dist"),
+		publicPath: "/",
 	},
 	module: {
 		rules: [
 			{
 				test: /\.(html)$/,
-				loader: 'html-loader'
+				loader: "html-loader",
 			},
 			{
 				test: /\.(j|t)sx?$/,
 				include: APP_PATH,
 				use: [
 					{
-						loader: 'babel-loader',
+						loader: "babel-loader",
 						options: {
-							presets: [
-								'@babel/preset-react',
-								'@babel/preset-env'
-							],
+							presets: ["@babel/preset-react", "@babel/preset-env"],
 							plugins: [
-								['@babel/plugin-proposal-class-properties', { loose: true }]
+								["@babel/plugin-proposal-class-properties", { loose: true }],
 							],
-							cacheDirectory: true
-						}
+							cacheDirectory: true,
+						},
 					},
 					{
-						loader: 'awesome-typescript-loader'
-					}
-				]
+						loader: "awesome-typescript-loader",
+					},
+				],
 			},
 			{
 				test: /\.(less|css)$/,
 				use: [
 					{
-						loader: 'style-loader'
+						loader: "style-loader",
 					},
 					{
-						loader: 'css-loader',
+						loader: "css-loader",
 						options: {
-							modules: false
-						}
+							modules: false,
+						},
 					},
-					'postcss-loader',
+					"postcss-loader",
 					{
-						loader: 'less-loader',
-						options: { javascriptEnabled: true }
-					}
-				]
+						loader: "less-loader",
+						options: { javascriptEnabled: true },
+					},
+				],
 			},
 			{
 				test: /\.svg$/,
-				use: [ '@svgr/webpack' ]
+				use: ["@svgr/webpack"],
 			},
 			{
 				test: /\.(jpg|jpeg|bmp|png|webp|gif)$/,
-				use: [ 'file-loader' ]
+				use: ["file-loader"],
 			},
-		]
+		],
 	},
 	resolve: {
-		extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
+		extensions: [".js", ".json", ".jsx", ".ts", ".tsx"],
 		alias: {
-			'App': path.resolve(__dirname, '../src/')
-		}
+			App: path.resolve(__dirname, "../src/"),
+		},
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
 			inject: true,
-			template: path.resolve(__dirname, '../public/index.html'),
-			showErrors: true
+			template: path.resolve(__dirname, "../public/index.html"),
+			showErrors: true,
 		}),
 		new CopyWebpackPlugin({
 			patterns: [
 				{
-					from: 'public',
+					from: "public",
 					globOptions: {
-						ignore: [
-							'index.html'
-						]
-					}
-				}
-			]
-		})
+						ignore: ["index.html"],
+					},
+				},
+			],
+		}),
+		//ISSUE: Cannot use import statement outside a module
+		//new ESLintPlugin({
+		//	eslintPath: path.resolve(__dirname, ".."),
+		//	extensions: ["js", "jsx", "ts", "tsx"],
+		//}),
 	],
-	optimization: {}
+	optimization: {},
 });
